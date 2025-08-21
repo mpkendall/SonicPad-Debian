@@ -1,3 +1,7 @@
+# Ensure custom Xorg configuration is used
+echo "Copying custom xorg.conf for display setup"
+sudo mkdir -p /etc/X11
+sudo cp /home/$USER/scripts/resources/xorg.conf /etc/X11/xorg.conf
 #!/bin/bash
 
 set -e
