@@ -6,44 +6,24 @@ INSTALLER_DIR="$(dirname -- "$(readlink -f "${BASH_SOURCE[0]}")")"
 SYSTEMD="/etc/systemd/system"
 USER=$(whoami)
 
+
 echo "Adding hostname to hosts"
 sudo -- sh -c "echo '127.0.1.1 SonicPad' >> /etc/hosts"
 
-source ./install_klipper.sh
-source ./install_moonraker.sh
-source ./install_klipperscreen.sh
+# Install XFCE and LightDM for tablet desktop experience
+echo "Installing XFCE and LightDM display manager"
+sudo apt-get update
+sudo apt-get install -y xfce4 xfce4-goodies lightdm
 
-echo "Installing Klipper"
-install_klipper
+# Enable LightDM to start at boot
+sudo systemctl enable lightdm
 
-echo "Installing Moonraker"
-install_moonraker
-
-echo "Installing Klipperscreen"
-install_klipperscreen
-
-echo "Enabling depmod service"
-sudo chmod +x /usr/local/bin/depmod_enable.sh
-sudo systemctl enable depmod_boot
-
-echo "Enabling expandfs"
-sudo chmod +x /usr/local/bin/expandfs_enable.sh
-sudo systemctl enable expandfs
-
-echo "Enabling LED EMMC"
-sudo chmod +x /usr/local/bin/ledmmc_enable.sh
-sudo systemctl enable ledmmc
-
-echo "Enabling USB Host"
-sudo chmod +x /usr/local/bin/usbhost_enable.sh
-sudo systemctl enable usbhost
-
-echo "Enabling screen timeout script"
-sudo chmod +x /usr/local/bin/display-sleep.sh
-sudo systemctl enable display-sleep.service 
-
-# echo "Running depmod"
-# sudo depmod 4.9.191
+# Optionally, set up autologin for the default user
+DEFAULT_USER=$(getent passwd 1000 | cut -d: -f1)
+if [ -n "$DEFAULT_USER" ]; then
+	sudo mkdir -p /etc/lightdm/lightdm.conf.d
+	echo -e "[Seat:*]\nautologin-user=$DEFAULT_USER" | sudo tee /etc/lightdm/lightdm.conf.d/50-autologin.conf
+fi
 
 echo "Fixing networking..."
 sudo -- sh -c "echo 'ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev' > /etc/wpa_supplicant/wpa_supplicant.conf"
