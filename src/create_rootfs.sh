@@ -108,16 +108,23 @@ stop_spinner
 
 echo "Done creating rootfs"
 
-start_spinner "Installing Klipper, Moonraker, KlipperScreen"
+start_spinner "Installing Desktop Environment"
 {
-    cp -r scripts $ROOTFS_DIR/home/$L_USERNAME/
-    chmod +x $ROOTFS_DIR/home/$L_USERNAME/scripts/*.sh
-    LC_ALL=C LANGUAGE=C LANG=C chroot $ROOTFS_DIR /bin/bash -c "echo '$L_USERNAME ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers"
-    LC_ALL=C LANGUAGE=C LANG=C chroot $ROOTFS_DIR /bin/su -c "cd /home/$L_USERNAME/scripts && ./install_services.sh" - $L_USERNAME
-    LC_ALL=C LANGUAGE=C LANG=C chroot $ROOTFS_DIR /bin/bash -c "sed -i '$ d' /etc/sudoers"
-    LC_ALL=C LANGUAGE=C LANG=C chroot $ROOTFS_DIR /bin/bash -c "rm -rf /home/$L_USERNAME/scripts"
-    LC_ALL=C LANGUAGE=C LANG=C chroot $ROOTFS_DIR /bin/bash -c "echo '$L_USERNAME ALL = NOPASSWD:/bin/brightness' >> /etc/sudoers"
+    # Update package list inside chroot
+    LC_ALL=C LANGUAGE=C LANG=C chroot $ROOTFS_DIR apt update
+
+    # Install XFCE desktop environment and a display manager (you can choose others like lxde, mate, etc.)
+    LC_ALL=C LANGUAGE=C LANG=C chroot $ROOTFS_DIR apt install -y xfce4 xfce4-goodies lightdm
+
+    # Optionally, install Firefox and file manager
+    LC_ALL=C LANGUAGE=C LANG=C chroot $ROOTFS_DIR apt install -y firefox-esr thunar
+
+    # Enable lightdm to start at boot
+    LC_ALL=C LANGUAGE=C LANG=C chroot $ROOTFS_DIR systemctl enable lightdm
+
+    # Optionally, add your user to video and audio groups for desktop usability
+    LC_ALL=C LANGUAGE=C LANG=C chroot $ROOTFS_DIR usermod -aG audio,video $L_USERNAME
 } &> $SHELLTRAP
 stop_spinner
 
-echo "Done installing services"
+echo "Done installing desktop environment"
