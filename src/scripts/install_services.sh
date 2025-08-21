@@ -1,3 +1,7 @@
+# Allow any user to start Xorg
+echo "Configuring Xorg to allow any user to start X server"
+sudo mkdir -p /etc/X11
+echo -e "allowed_users=anybody\nneeds_root_rights=yes" | sudo tee /etc/X11/Xwrapper.config
 # Ensure custom Xorg configuration is used
 echo "Copying custom xorg.conf for display setup"
 sudo mkdir -p /etc/X11
