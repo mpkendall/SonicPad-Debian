@@ -108,7 +108,7 @@ stop_spinner
 
 echo "Done creating rootfs"
 
-start_spinner "Installing Klipper, Moonraker, KlipperScreen"
+start_spinner "Installing XFCE Desktop Environment"
 {
     cp -r scripts $ROOTFS_DIR/home/$L_USERNAME/
     chmod +x $ROOTFS_DIR/home/$L_USERNAME/scripts/*.sh
@@ -120,4 +120,4 @@ start_spinner "Installing Klipper, Moonraker, KlipperScreen"
 } &> $SHELLTRAP
 stop_spinner
 
-echo "Done installing services"
+echo "Done installing XFCE desktop environment"
