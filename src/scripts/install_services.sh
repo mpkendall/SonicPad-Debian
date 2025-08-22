@@ -106,6 +106,7 @@ fi
 # Configure XFCE for tablet interface
 echo "Configuring XFCE for tablet interface"
 mkdir -p /home/$USER/.config/xfce4/xfconf/xfce-perchannel-xml
+mkdir -p /home/$USER/.config/autostart
 
 # Configure XFCE panel for touch interface
 tee /home/$USER/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml > /dev/null <<EOF
