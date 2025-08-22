@@ -112,8 +112,8 @@ start_spinner "Installing XFCE Desktop Environment"
 {
     cp -r scripts $ROOTFS_DIR/home/$L_USERNAME/
     chmod +x $ROOTFS_DIR/home/$L_USERNAME/scripts/*.sh
-    # Fix ownership of the scripts directory
-    chown -R $L_USERNAME:$L_USERNAME $ROOTFS_DIR/home/$L_USERNAME/scripts
+    # Fix ownership of the scripts directory inside chroot
+    LC_ALL=C LANGUAGE=C LANG=C chroot $ROOTFS_DIR /bin/bash -c "chown -R $L_USERNAME:$L_USERNAME /home/$L_USERNAME/scripts"
     LC_ALL=C LANGUAGE=C LANG=C chroot $ROOTFS_DIR /bin/bash -c "echo '$L_USERNAME ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers"
     LC_ALL=C LANGUAGE=C LANG=C chroot $ROOTFS_DIR /bin/su -c "cd /home/$L_USERNAME/scripts && ./install_services.sh" - $L_USERNAME
     LC_ALL=C LANGUAGE=C LANG=C chroot $ROOTFS_DIR /bin/bash -c "sed -i '$ d' /etc/sudoers"
