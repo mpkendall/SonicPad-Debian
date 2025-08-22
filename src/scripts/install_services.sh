@@ -183,6 +183,7 @@ tee /home/$USER/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml > /de
 EOF
 
 # Create a tablet-friendly launcher script
+mkdir -p /home/$USER/.config/autostart
 tee /home/$USER/.config/autostart/tablet-setup.desktop > /dev/null <<EOF
 [Desktop Entry]
 Type=Application
@@ -195,7 +196,6 @@ X-GNOME-Autostart-enabled=true
 EOF
 
 # Create the tablet startup script
-mkdir -p /home/$USER/scripts
 tee /home/$USER/scripts/tablet-startup.sh > /dev/null <<EOF
 #!/bin/bash
 # Tablet startup configuration
