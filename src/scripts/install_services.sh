@@ -195,6 +195,7 @@ X-GNOME-Autostart-enabled=true
 EOF
 
 # Create the tablet startup script
+mkdir -p /home/$USER/scripts
 tee /home/$USER/scripts/tablet-startup.sh > /dev/null <<EOF
 #!/bin/bash
 # Tablet startup configuration
