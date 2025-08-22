@@ -31,7 +31,15 @@ sudo apt-get install -y \
     pulseaudio \
     pavucontrol \
     xserver-xorg-input-libinput \
-    at-spi2-core
+    at-spi2-core \
+    xinit
+
+# Disable Plymouth to see boot messages
+echo "Disabling Plymouth splash for debugging"
+sudo systemctl mask plymouth-start.service 2>/dev/null || true
+sudo systemctl mask plymouth-read-write.service 2>/dev/null || true
+sudo systemctl mask plymouth-quit-wait.service 2>/dev/null || true
+sudo systemctl mask plymouth-quit.service 2>/dev/null || true
 
 # Configure X11 for tablet/touchscreen
 echo "Configuring X11 for touchscreen and proper display"
@@ -86,20 +94,27 @@ echo "Configuring Xorg to allow any user to start X server"
 sudo mkdir -p /etc/X11
 echo -e "allowed_users=anybody\nneeds_root_rights=yes" | sudo tee /etc/X11/Xwrapper.config
 
-# Enable LightDM to start at boot
-sudo systemctl enable lightdm
+# Enable LightDM to start at boot (disabled for initial testing)
+echo "LightDM setup complete - not auto-enabled for debugging"
+# sudo systemctl enable lightdm
 
-# Configure autologin for tablet experience
+# Set default target to multi-user for debugging
+sudo systemctl set-default multi-user.target
+
+# Configure autologin for tablet experience (disabled for debugging)
 DEFAULT_USER=$(getent passwd 1000 | cut -d: -f1)
 if [ -n "$DEFAULT_USER" ]; then
-    echo "Setting up autologin for $DEFAULT_USER"
+    echo "Setting up LightDM configuration for $DEFAULT_USER"
     sudo mkdir -p /etc/lightdm/lightdm.conf.d
-    sudo tee /etc/lightdm/lightdm.conf.d/50-autologin.conf > /dev/null <<EOF
+    sudo tee /etc/lightdm/lightdm.conf.d/50-tablet.conf > /dev/null <<EOF
 [Seat:*]
-autologin-user=$DEFAULT_USER
-autologin-user-timeout=0
+# Autologin disabled for debugging - enable after testing
+# autologin-user=$DEFAULT_USER
+# autologin-user-timeout=0
 user-session=xfce
-greeter-hide-users=false
+greeter-session=lightdm-gtk-greeter
+xserver-command=X -s 0 -dpms
+display-setup-script=/usr/local/bin/setup-display.sh
 EOF
 fi
 
