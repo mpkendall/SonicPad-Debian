@@ -15,7 +15,6 @@ sudo apt-get update
 sudo apt-get install -y \
     xfce4 \
     xfce4-goodies \
-    xfce4-panel-profiles \
     xfce4-screenshooter \
     xfce4-taskmanager \
     xfce4-terminal \
@@ -23,14 +22,16 @@ sudo apt-get install -y \
     lightdm-gtk-greeter \
     onboard \
     firefox-esr \
-    file-manager-actions \
+    thunar \
     thunar-volman \
+    thunar-archive-plugin \
     gvfs \
     gvfs-backends \
     network-manager-gnome \
     pulseaudio \
     pavucontrol \
-    xserver-xorg-input-libinput
+    xserver-xorg-input-libinput \
+    at-spi2-core
 
 # Configure X11 for tablet/touchscreen
 echo "Configuring X11 for touchscreen and proper display"
